@@ -30,6 +30,9 @@ class Conversation(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     type: Mapped[str] = mapped_column(String(12), default="direct")
     title: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    created_by: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    description: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    avatar_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
 
@@ -40,6 +43,7 @@ class ConversationMember(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     role: Mapped[str] = mapped_column(String(12), default="member")
     joined_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
+    last_read_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     __table_args__ = (UniqueConstraint("conversation_id", "user_id"),)
 
 class Message(Base):
