@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+# Signal_clone
+=======
 # Signal-style Messenger (educational clone)
 
 A desktop-first messaging application inspired by Signal. This is an original implementation for a software project; it is not affiliated with Signal Messenger.
@@ -101,3 +104,4 @@ The repository includes a Render Blueprint in [`render.yaml`](./render.yaml) for
 The Render Blueprint uses a free API instance for evaluation; it may sleep when idle. Use an always-on plan for a responsive app. Keep the API at one instance: the current WebSocket manager is in-memory, so multiple instances need Redis/pub-sub to deliver messages between clients on different instances. Use PostgreSQL rather than SQLite because a deployed service's local filesystem is not a suitable persistent database.
 
 Vercel includes `NEXT_PUBLIC_*` values in the frontend build, so add them before deploying or redeploy after changes. Never put the database URL or JWT secret in Vercel's public frontend variables.
+>>>>>>> b5aaa40 (Prepare Signal clone for deployment)
