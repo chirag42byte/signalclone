@@ -1,107 +1,417 @@
-<<<<<<< HEAD
-# Signal_clone
-=======
-# Signal-style Messenger (educational clone)
+# Signal – Real-Time Messaging Application
 
-A desktop-first messaging application inspired by Signal. This is an original implementation for a software project; it is not affiliated with Signal Messenger.
+A full-stack messaging application inspired by Signal, built using Next.js, React, FastAPI, WebSockets, and PostgreSQL.
 
-## Features in this starter
-- Username/password registration and login with JWT session persistence
-- Seeded demo users and conversations
-- Direct conversations and group conversation data model
-- Persistent messages in SQLite
-- WebSocket delivery of new messages and typing events, with undelivered-message replay after reconnect
-- Per-recipient sent, delivered, and read message states
-- Idempotent message submission using client-generated IDs
-- Message timestamps, optimistic sending, online status field
-- Search users and conversations
-- Responsive desktop/mobile layout and settings placeholders
+The application supports user authentication, one-to-one messaging, group conversations, real-time communication, and persistent message storage.
 
-## Stack
-- Next.js 15, React 19, TypeScript, Tailwind CSS
-- FastAPI, SQLAlchemy, SQLite
-- WebSockets, JWT, bcrypt
+## Live Demo
 
-## Run locally
+| Component | Link |
+|---|---|
+| **Live Application** | https://signalclone-mu.vercel.app/ |
+| Backend API | https://signal-clone-api-s88a.onrender.com/ |
+| API Documentation | https://signal-clone-api-s88a.onrender.com/docs |
+| GitHub Repository | https://github.com/chirag42byte/signalclone |
 
-### Backend
+**Important:** The backend runs on Render's free tier. If inactive, it may spin down. The first request after inactivity can take approximately 50 seconds or more to respond. Please allow the application some time to initialize.
+
+---
+
+# 1. Testing the Live Demo
+
+The application can be tested directly through the deployed link. No installation or local configuration is required.
+
+**Recommended:** Use two or three separate browser sessions to test communication between multiple users.
+
+## Test 1: User Registration
+
+1. Open the [Live Application](https://signalclone-mu.vercel.app/).
+2. Navigate to the registration/sign-up page.
+3. Enter the following details:
+   - Display Name
+   - Username
+   - Password
+   - Phone Number (if requested)
+4. Submit the registration form.
+5. You should be automatically logged in and redirected to the messaging interface.
+
+Create at least two accounts with different usernames to test messaging.
+
+Each username must be unique.
+
+## Test 2: User Login
+
+1. Open the application in another browser or an Incognito window.
+2. Navigate to the login page.
+3. Enter the credentials of the second account.
+4. Click Login.
+5. Verify that the second user is redirected to their messaging interface.
+
+You should now have two independently authenticated users.
+
+## Test 3: One-to-One Messaging
+
+Use the two accounts created previously.
+
+**User A:**
+1. Open the application in your primary browser.
+2. Navigate to the user search or contacts section.
+3. Search for User B using their username.
+4. Select User B and open a conversation.
+
+**User B:**
+1. Keep the second browser session open.
+2. Wait for the incoming conversation or notification.
+
+Now send messages between both users.
+
+Verify the following:
+
+- Messages sent by User A appear in User B's conversation.
+- Messages sent by User B appear in User A's conversation.
+- Messages are delivered without manually refreshing the browser.
+- Messages appear in the correct conversation.
+- Message timestamps are displayed correctly.
+
+## Test 4: Real-Time Communication
+
+This test verifies the WebSocket implementation.
+
+1. Keep both users logged in simultaneously.
+2. Open the same conversation from both accounts.
+3. Send a message from User A.
+4. Observe User B's screen.
+
+**Expected result:** The message should appear on User B's screen without requiring a page refresh.
+
+Repeat the same test in the opposite direction.
+
+This verifies bidirectional real-time communication.
+
+## Test 5: Message Persistence
+
+This test verifies that messages are stored in the database.
+
+1. Exchange several messages between User A and User B.
+2. Refresh User B's browser.
+3. Open the conversation again.
+4. Verify that previous messages are still available.
+5. Log out of User B's account.
+6. Log back in using the same credentials.
+7. Open the conversation again.
+
+**Expected result:** Previously exchanged messages should remain available after refreshing and logging back in.
+
+## Test 6: Group Messaging
+
+Use three independently registered accounts.
+
+1. Log in as User A.
+2. Navigate to the group creation option.
+3. Enter a group name.
+4. Search for and select User B and User C.
+5. Create the group.
+6. Verify that the group appears in the conversation list.
+
+Now test group communication:
+
+1. Send a message from User A.
+2. Verify that User B and User C receive the message.
+3. Reply from User B.
+4. Verify that User A and User C receive the reply.
+5. Send another message from User C.
+6. Verify that all group members receive it.
+
+**Expected result:** All group members should be able to exchange messages in real time, and group messages should remain available after refreshing the application.
+
+## Test 7: Authentication and Session Handling
+
+1. Log in using a registered account.
+2. Verify that authenticated sections are accessible.
+3. Log out.
+4. Attempt to access an authenticated section again.
+5. Verify that the application requires authentication.
+6. Log in again and verify that the previous conversations are accessible.
+
+---
+
+# 2. Features
+
+### Authentication
+- User registration and login.
+- Secure password hashing.
+- JWT-based authentication.
+- Authenticated API requests.
+
+### One-to-One Messaging
+- Direct conversations between users.
+- Real-time message delivery using WebSockets.
+- Persistent message history.
+- Message delivery and read receipts.
+- Duplicate message prevention using client-generated message IDs.
+
+### Group Messaging
+- Create group conversations.
+- Add multiple participants during group creation.
+- Group-based message broadcasting.
+- Persistent group conversations.
+- Multiple users communicating simultaneously.
+
+### User Management
+- Search registered users.
+- Add users to contacts.
+- Online/offline presence.
+- Last-seen information.
+
+### Messaging Interface
+- Conversation sidebar.
+- Message previews and timestamps.
+- Responsive interface.
+- Real-time conversation updates.
+
+---
+
+# 3. Technology Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | Next.js, React, TypeScript |
+| Backend | Python, FastAPI |
+| Database | PostgreSQL |
+| ORM | SQLAlchemy |
+| Authentication | JWT |
+| Real-time Communication | WebSockets |
+| Frontend Hosting | Vercel |
+| Backend Hosting | Render |
+
+---
+
+# 4. Architecture
+
+The application follows a decoupled client-server architecture.
+
+```text
+             Users / Browsers
+                    |
+                    v
+             Next.js Frontend
+                  Vercel
+                    |
+             HTTP / REST API
+                    |
+                    v
+              FastAPI Backend
+                  Render
+                    |
+           +--------+--------+
+           |                 |
+           v                 v
+       WebSockets         PostgreSQL
+       Real-time          Persistent
+       Messaging           Storage
+```
+
+- REST APIs handle authentication, user management, contacts, and conversation operations.
+- WebSockets provide bidirectional communication for real-time messaging and typing events.
+- PostgreSQL stores users, conversations, memberships, messages, and message receipts.
+- JWT tokens authenticate users and authorize protected operations.
+
+---
+
+# 5. Local Development Setup
+
+### Prerequisites
+
+- Python 3.12+
+- Node.js and npm
+- PostgreSQL
+- Git
+
+### Step 1: Clone the repository
+
+```bash
+git clone https://github.com/chirag42byte/signalclone.git
+cd signalclone
+```
+
+### Step 2: Backend Setup
+
 ```bash
 cd backend
-python -m venv .venv
-# Windows: .venv\\Scripts\\activate
-# macOS/Linux: source .venv/bin/activate
-pip install -r requirements.txt
-python seed.py
-uvicorn app.main:app --reload
-```
-API docs: http://localhost:8000/docs
 
-### Frontend
+python -m venv venv
+```
+
+Activate the environment.
+
+**Windows:**
+
+```powershell
+venv\Scripts\activate
+```
+
+**Linux/macOS:**
+
+```bash
+source venv/bin/activate
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Create a `.env` file inside the backend directory:
+
+```env
+DATABASE_URL=postgresql://username:password@localhost:5432/signalclone
+
+SECRET_KEY=your_secure_secret_key
+
+CORS_ORIGINS=http://localhost:3000
+```
+
+Start the backend:
+
+```bash
+uvicorn app.main:app --reload --port 8000
+```
+
+Backend URL:
+
+http://localhost:8000
+
+API documentation:
+
+http://localhost:8000/docs
+
+### Step 3: Frontend Setup
+
+Open another terminal:
+
 ```bash
 cd frontend
+
 npm install
+```
+
+Create a `.env.local` file inside the frontend directory:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8000
+
+NEXT_PUBLIC_WS_URL=ws://localhost:8000
+```
+
+Start the frontend:
+
+```bash
 npm run dev
 ```
-Open http://localhost:3000.
 
-### Demo accounts
-- alex / signal123
-- sam / signal123
-- jordan / signal123
-- taylor / signal123
+Open:
 
-## Environment variables
-Optional frontend variables:
-- `NEXT_PUBLIC_API_URL` (default `http://localhost:8000`)
-- `NEXT_PUBLIC_WS_URL` (default `ws://localhost:8000`)
+http://localhost:3000
 
-## Architecture
-The browser uses REST for authentication, user search, conversation loading, durable message writes, and read receipts. A WebSocket connection per authenticated user carries live message events and typing indicators; the client reconnects with backoff, acknowledges received messages, and syncs the selected conversation. The backend persists each message and per-recipient receipt state in SQLite, replays messages that were not acknowledged while a recipient was offline, and broadcasts receipt updates. Opening a conversation marks its incoming messages as read.
+---
 
-## Database schema
-- `users`: identity and password hash
-- `contacts`: directed contact relationships and optional nickname
-- `conversations`: direct/group conversation metadata
-- `conversation_members`: membership and role
-- `messages`: durable message history and client idempotency key
-- `message_receipts`: per-recipient sent/delivered/read state
-- `reactions`: message reactions
+# 6. API Documentation
 
-Foreign keys express the relationships; unique constraints prevent duplicate memberships, contacts, receipts, and client message IDs.
+The backend exposes interactive API documentation through Swagger UI.
 
-## API overview
-- `POST /api/auth/register`, `POST /api/auth/login`, `POST /api/auth/logout`
-- `GET /api/me`
-- `GET /api/users?q=...`
-- `GET /api/contacts`, `POST /api/contacts`
-- `GET /api/conversations`
-- `POST /api/conversations/direct/{user_id}`
-- `POST /api/conversations/group`
-- `GET /api/conversations/{id}/messages`
-- `POST /api/conversations/{id}/messages`
-- `POST /api/messages/{id}/receipt`
-- `WS /ws/{user_id}?token=...`
+**[Explore the API Documentation](https://signal-clone-api-s88a.onrender.com/docs)**
 
-## Important limitations / assumptions
-- This is a functional educational prototype, not production Signal.
-- End-to-end encryption, real phone/SMS verification, push notifications, file uploads, full group administration UI, and production-grade presence are not implemented yet.
-- The UI is Signal-inspired and uses original CSS/components; it does not use Signal's proprietary assets.
-- Production requires a secret `SECRET_KEY`, a persistent PostgreSQL `DATABASE_URL`, and your frontend origin in `CORS_ORIGINS`.
-- For production, add rate limiting, database migrations, refresh-token rotation, authorization tests, and shared pub/sub before running multiple API instances.
+Important API endpoints include:
 
-## Deploying
-The repository includes a Render Blueprint in [`render.yaml`](./render.yaml) for a single-instance FastAPI service. To deploy:
+| Method | Endpoint | Purpose |
+|---|---|---|
+| POST | `/api/auth/register` | Register a user |
+| POST | `/api/auth/login` | Authenticate a user |
+| POST | `/api/auth/logout` | Log out |
+| GET | `/api/me` | Retrieve current user |
+| GET | `/api/users` | Search users |
+| POST | `/api/contacts` | Add a contact |
+| GET | `/api/contacts` | Retrieve contacts |
+| POST | `/api/conversations/direct/{other_id}` | Create/open direct conversation |
+| POST | `/api/conversations/group` | Create a group |
+| GET | `/api/conversations` | Retrieve conversations |
+| GET | `/api/conversations/{conversation_id}/messages` | Retrieve message history |
+| POST | `/api/conversations/{conversation_id}/messages` | Send a message |
+| POST | `/api/messages/{message_id}/receipt` | Update message receipt |
 
-1. Push the repository to GitHub.
-2. In Render, create a **PostgreSQL** database in the **Oregon** region. Choose a persistent paid plan for any real users; Render's free database expires. Copy its **internal** connection URL.
-3. In Render, create a Blueprint from the repository. The Blueprint creates the API with a generated `SECRET_KEY`; it prompts for `DATABASE_URL` and `CORS_ORIGINS`. Set `DATABASE_URL` to the PostgreSQL internal URL. The SQLAlchemy setup accepts Render's `postgres://`/`postgresql://` URL schemes and uses psycopg 3.
-4. Create a Vercel project from the same GitHub repository and set its **Root Directory** to `frontend`. Add these Production environment variables, substituting the Render service hostname and Vercel domain:
-   - `NEXT_PUBLIC_API_URL`: `https://<render-service>.onrender.com`
-   - `NEXT_PUBLIC_WS_URL`: `wss://<render-service>.onrender.com`
-5. Set Render's `CORS_ORIGINS` to the exact Vercel origin, for example `https://<your-app>.vercel.app` (no path or trailing slash). Include any custom domain as another comma-separated origin. Redeploy both services after changing environment variables.
-6. Open the Vercel URL, register a new account, and test messaging and WebSocket reconnects. Tables are created at API startup. **Do not run `backend/seed.py` on a public production service**: it creates accounts with the published demo password.
+WebSocket endpoint:
 
-The Render Blueprint uses a free API instance for evaluation; it may sleep when idle. Use an always-on plan for a responsive app. Keep the API at one instance: the current WebSocket manager is in-memory, so multiple instances need Redis/pub-sub to deliver messages between clients on different instances. Use PostgreSQL rather than SQLite because a deployed service's local filesystem is not a suitable persistent database.
+```text
+/ws/{user_id}?token={jwt_token}
+```
 
-Vercel includes `NEXT_PUBLIC_*` values in the frontend build, so add them before deploying or redeploy after changes. Never put the database URL or JWT secret in Vercel's public frontend variables.
->>>>>>> b5aaa40 (Prepare Signal clone for deployment)
+---
+
+# 7. Environment Variables
+
+### Backend
+
+| Variable | Description |
+|---|---|
+| DATABASE_URL | PostgreSQL connection string |
+| SECRET_KEY | JWT signing secret |
+| CORS_ORIGINS | Allowed frontend origins |
+
+### Frontend
+
+| Variable | Description |
+|---|---|
+| NEXT_PUBLIC_API_URL | Backend HTTP API URL |
+| NEXT_PUBLIC_WS_URL | Backend WebSocket URL |
+
+Never commit environment files, database credentials, or JWT secrets to GitHub.
+
+---
+
+# 8. Project Structure
+
+```text
+signalclone/
+│
+├── backend/
+│   ├── app/
+│   │   ├── main.py
+│   │   ├── models.py
+│   │   ├── schemas.py
+│   │   ├── database.py
+│   │   ├── security.py
+│   │   └── realtime.py
+│   │
+│   └── requirements.txt
+│
+├── frontend/
+│   ├── app/
+│   ├── package.json
+│   └── ...
+│
+├── render.yaml
+├── README.md
+└── ...
+```
+
+---
+
+# 9. Future Improvements
+
+- End-to-end encryption.
+- File and media sharing.
+- Push notifications.
+- Message reactions.
+- Improved message pagination and search.
+- Enhanced group administration.
+
+---
+
+# Author
+
+**Chirag Bali**
+
+GitHub: https://github.com/chirag42byte
+
+Built as a full-stack real-time messaging application to explore backend engineering, REST API development, WebSockets, authentication, database management, and cloud deployment.
