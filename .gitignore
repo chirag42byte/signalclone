@@ -1,0 +1,11 @@
+﻿.env
+.env.*
+!.env.example
+.venv/
+__pycache__/
+*.py[cod]
+backend/signal_clone.db
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.vercel/

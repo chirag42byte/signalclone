@@ -1,0 +1,213 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --signal-blue: #3a76e8;
+  --signal-ink: #20252b;
+  --signal-muted: #818992;
+  --signal-border: #e7e9ec;
+  --signal-hover: #f5f7f9;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: #f7f8fa;
+  color: var(--signal-ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.messenger-shell {
+  background: #fff;
+}
+
+.conversation-sidebar {
+  width: 360px;
+  background: #fff;
+}
+
+.conversation-sidebar > div:first-child,
+.chat-panel > header {
+  min-height: 64px;
+  background: #fff;
+}
+
+.conversation-sidebar > div:first-child {
+  padding-left: 22px;
+  padding-right: 18px;
+}
+
+.conversation-sidebar > div:first-child > div:first-child > div:first-child {
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgb(58 118 232 / 18%);
+}
+
+.conversation-sidebar input::placeholder,
+.chat-panel > div:last-child textarea::placeholder {
+  color: #9299a1;
+}
+
+.conversation-sidebar input:focus-visible,
+.chat-panel > div:last-child textarea:focus-visible {
+  outline: none;
+}
+
+.conversation-sidebar > div:nth-child(3) {
+  scrollbar-color: #d7dbe0 transparent;
+  scrollbar-width: thin;
+}
+
+.conversation-sidebar > div:nth-child(3) > button {
+  min-height: 78px;
+  padding: 11px 16px;
+  transition: background-color 120ms ease;
+}
+
+.conversation-sidebar > div:nth-child(3) > button:hover {
+  background: #f6f7f8;
+}
+
+.conversation-sidebar > div:nth-child(3) > button[class*="bg-[#f0f4fa]"] {
+  background: #edf3fc;
+}
+
+.conversation-sidebar > div:nth-child(3) > button > div:nth-child(2) {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-color: #f0f1f3;
+}
+
+.conversation-sidebar > div:last-child {
+  min-height: 68px;
+  background: #fff;
+}
+
+.chat-panel {
+  background: #fbfbfc;
+}
+
+.chat-panel > header {
+  padding-left: 24px;
+  padding-right: 24px;
+  border-color: var(--signal-border);
+}
+
+.chat-panel > header > div:nth-child(3) > div:first-child {
+  letter-spacing: -0.01em;
+}
+
+.chat-panel > div:nth-child(2) {
+  background-color: #fbfbfc;
+  background-image: radial-gradient(#e9ebee 0.65px, transparent 0.65px);
+  background-size: 19px 19px;
+  scrollbar-color: #d7dbe0 transparent;
+  scrollbar-width: thin;
+}
+
+.chat-panel > div:nth-child(2) > div > div > div {
+  min-width: 76px;
+  padding: 8px 12px 6px;
+  border: 1px solid rgb(30 40 50 / 3%);
+  box-shadow: 0 1px 2px rgb(30 40 50 / 6%);
+}
+
+.chat-panel > div:nth-child(2) > div > div[class~="justify-end"] > div {
+  background: #dce9ff;
+}
+
+.chat-panel > div:nth-child(2) > div > div[class~="justify-start"] > div {
+  background: #fff;
+}
+
+.chat-panel > div:last-child {
+  background: #fbfbfc;
+}
+
+.chat-panel > div:last-child > div:first-child {
+  background: #fff;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.chat-panel > div:last-child > div:first-child:focus-within {
+  border-color: #c5d6f2;
+  box-shadow: 0 0 0 3px rgb(58 118 232 / 8%);
+}
+
+.chat-panel > div.flex-1:has(h2) {
+  background:
+    radial-gradient(ellipse at 50% 43%, rgb(231 239 252 / 55%), transparent 31%),
+    #fbfbfc;
+}
+
+.chat-panel > div.flex-1:has(h2) > div:first-child {
+  border-radius: 26px;
+  box-shadow: 0 12px 32px rgb(58 118 232 / 10%);
+}
+
+.messenger-shell > div.fixed {
+  background: rgb(26 33 42 / 36%);
+  backdrop-filter: blur(3px);
+}
+
+.messenger-shell > div.fixed > div {
+  border: 1px solid rgb(255 255 255 / 70%);
+  box-shadow: 0 20px 60px rgb(20 30 40 / 20%);
+}
+
+.auth-screen {
+  background:
+    radial-gradient(ellipse at 50% 38%, rgb(223 235 255 / 75%), transparent 45%),
+    #f5f7fa;
+}
+
+.auth-card {
+  border: 1px solid #eef0f3;
+  box-shadow: 0 18px 50px rgb(38 54 74 / 10%);
+}
+
+@media (max-width: 767px) {
+  .messenger-shell > .conversation-sidebar {
+    width: 100%;
+  }
+
+  .chat-panel > header {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .chat-panel > div:nth-child(2) {
+    background-image: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
